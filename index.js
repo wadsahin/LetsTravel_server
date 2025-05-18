@@ -27,9 +27,76 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
+
+    // -------------------------------- DB Collections ------------------------------
+    const usersCollections = client.db("letsTravelDB").collection("users");
+    const tripsCollections = client.db("letsTravelDB").collection("trips");
+    const storiesCollections = client.db("letsTravelDB").collection("stories");
+    const destinationsCollections = client.db("letsTravelDB").collection("destinations");
+
+
+    // ----------------------------------- Get APIs ---------------------------------
+    app.get("/users", async (req, res) => {
+      const result = await usersCollections.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/trips", async (req, res) => {
+      const result = await tripsCollections.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/stories", async (req, res) => {
+      const result = await storiesCollections.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/destinations", async (req, res) => {
+      const result = await destinationsCollections.find().toArray();
+      res.send(result);
+    });
+
+
+
+    app.get("/users", async (req, res) => {
+      // const email = req.query;
+    });
+
+
+    // ----------------------------------- POST APIs ---------------------------------
+    app.post("/users", async (req, res) => {
+      const newUser = req.body;
+      const result = await usersCollections.insertOne(newUser);
+      res.send(result);
+    });
+
+    app.post("/trips", async (req, res) => {
+      const newTrip = req.body;
+      const result = await tripsCollections.insertOne(newTrip);
+      res.send(result);
+    });
+
+    app.post("/stories", async (req, res) => {
+      const newStory = req.body;
+      const result = await storiesCollections.insertOne(newStory);
+      res.send(result);
+    });
+
+    app.post("/destinations", async (req, res) => {
+      const newDestination = req.body;
+      const result = await destinationsCollections.insertOne(newDestination);
+      res.send(result);
+    });
+
+    // ----------------------------------- PUT/PATCH APIs ---------------------------------
+
+
+    // ----------------------------------- Delete APIs ---------------------------------
+
+
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
