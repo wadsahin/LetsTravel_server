@@ -57,10 +57,17 @@ async function run() {
       res.send(result);
     });
 
-
-
-    app.get("/users", async (req, res) => {
-      // const email = req.query;
+    // Single data load
+    app.get("/user", async (req, res) => {
+      const userEmail = req.query?.email;
+      // console.log(userEmail);
+      if (userEmail) {
+        const query = { email: userEmail };
+        const result = await usersCollections.findOne(query);
+        res.send(result);
+      }else{
+        return res.status(404).json({ message: 'User not found' });
+      }
     });
 
 
