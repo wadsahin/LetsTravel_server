@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 5000;
@@ -41,23 +41,7 @@ async function run() {
       const result = await usersCollections.find().toArray();
       res.send(result);
     });
-
-    app.get("/trips", async (req, res) => {
-      const result = await tripsCollections.find().toArray();
-      res.send(result);
-    });
-
-    app.get("/stories", async (req, res) => {
-      const result = await storiesCollections.find().toArray();
-      res.send(result);
-    });
-
-    app.get("/destinations", async (req, res) => {
-      const result = await destinationsCollections.find().toArray();
-      res.send(result);
-    });
-
-    // Single data load
+    // Get single user
     app.get("/user", async (req, res) => {
       const userEmail = req.query?.email;
       // console.log(userEmail);
@@ -65,10 +49,52 @@ async function run() {
         const query = { email: userEmail };
         const result = await usersCollections.findOne(query);
         res.send(result);
-      }else{
+      } else {
         return res.status(404).json({ message: 'User not found' });
       }
     });
+
+    app.get("/trips", async (req, res) => {
+      const result = await tripsCollections.find().toArray();
+      res.send(result);
+    });
+
+    // Get single trip
+    app.get("/trip/:id", async (req, res) => {
+      const tripId = req.params?.id;
+      const query = { _id: new ObjectId(tripId) };
+      const result = await tripsCollections.findOne(query);
+      res.send(result);
+
+    });
+
+    app.get("/stories", async (req, res) => {
+      const result = await storiesCollections.find().toArray();
+      res.send(result);
+    });
+
+    // Get single story
+    app.get("/story/:id", async (req, res) => {
+      const storyId = req.params?.id;
+      const query = { _id: new ObjectId(storyId) };
+      const result = await storiesCollections.findOne(query);
+      res.send(result);
+
+    });
+
+    app.get("/destinations", async (req, res) => {
+      const result = await destinationsCollections.find().toArray();
+      res.send(result);
+    });
+    // Get single destination
+    app.get("/destination/:id", async (req, res) => {
+      const destinationId = req.params?.id;
+      const query = { _id: new ObjectId(destinationId) };
+      const result = await destinationsCollections.findOne(query);
+      res.send(result);
+
+    });
+
 
 
     // ----------------------------------- POST APIs ---------------------------------
